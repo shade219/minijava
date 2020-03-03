@@ -1,0 +1,40 @@
+	.text
+	.globl	_asm_main
+_asm_main:
+	pushq %rbp
+	movq %rsp,%rbp
+	pushq %rax
+	call TS$TS
+	popq %rdx
+	call TS$Test
+	movq %rax,%rdi
+	call _put
+	movq %rbp,%rsp
+	popq %rbp
+	ret 
+TS$Test:
+	pushq %rbp
+	movq %rsp,%rbp
+	movq $16,%rax
+	movq %rax,%rdi
+	call _put
+	movq $9,%rax
+	movq %rbp,%rsp
+	popq %rbp
+	ret 
+TS$TS:
+	pushq %rbp
+	movq %rsp,%rbp
+	pushq %rdi
+	movq $8,%rdi
+	call _mjcalloc
+	popq %rdi
+	leaq TS$$(%rip),%rdx
+	movq %rdx,(%rax)
+	movq %rbp,%rsp
+	popq %rbp
+	ret 
+	.data
+TS$$: .quad 0
+	.quad TS$TS
+	.quad TS$Test
